@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinNews Daily Brief</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --surface: rgba(255, 252, 246, 0.92);
+      --ink: #18212f;
+      --muted: #5b6471;
+      --line: rgba(24, 33, 47, 0.12);
+      --accent: #0f4c5c;
+      --shadow: 0 22px 60px rgba(24, 33, 47, 0.12);
+      --headline: "Iowan Old Style", "Palatino Linotype", serif;
+      --body: "Avenir Next", "Helvetica Neue", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--body);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15, 76, 92, 0.16), transparent 30%),
+        radial-gradient(circle at right 20%, rgba(191, 83, 40, 0.12), transparent 26%),
+        linear-gradient(180deg, #f9f4eb 0%, #f1ebe1 100%);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 28px auto 56px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(15, 76, 92, 0.96), rgba(24, 33, 47, 0.92));
+      color: #f8fafc;
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .eyebrow {
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 12px;
+      opacity: 0.8;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font: 700 clamp(2.2rem, 5vw, 4.2rem)/0.96 var(--headline);
+      max-width: 11ch;
+    }
+
+    .narrative {
+      margin: 18px 0 0;
+      font: 400 clamp(1.2rem, 2vw, 1.6rem)/1.45 var(--headline);
+      max-width: 42ch;
+    }
+
+    .hero-meta {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: #7c3aed;
+      color: #fff;
+    }
+
+    .subtle {
+      color: rgba(248, 250, 252, 0.78);
+      font-size: 14px;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      margin-top: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .toc a {
+      display: block;
+      text-decoration: none;
+      color: var(--ink);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .toc a:last-child {
+      border-bottom: 0;
+    }
+
+    .section {
+      margin-top: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font: 700 clamp(1.4rem, 2.5vw, 2rem)/1.1 var(--headline);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(24, 33, 47, 0.08);
+      border-radius: 20px;
+      padding: 18px;
+      min-height: 100%;
+    }
+
+    .source-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font: 700 1.12rem/1.3 var(--headline);
+    }
+
+    .card h3 a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .card p {
+      margin: 10px 0 0;
+      line-height: 1.6;
+      color: #243041;
+      font-size: 0.96rem;
+    }
+
+    .lang-label {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .debug-trigger-row {
+      margin-top: 14px;
+      position: relative;
+    }
+
+    .debug-trigger {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(15, 76, 92, 0.1);
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .debug-trigger:hover,
+    .debug-trigger:focus-visible {
+      background: rgba(15, 76, 92, 0.16);
+      outline: none;
+    }
+
+    .debug-popup {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 10px);
+      z-index: 20;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(255, 252, 246, 0.98);
+      border: 1px solid rgba(15, 76, 92, 0.22);
+      box-shadow: 0 18px 44px rgba(24, 33, 47, 0.18);
+      backdrop-filter: blur(12px);
+    }
+
+    .debug-popup.is-open {
+      display: block;
+    }
+
+    .debug-popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .debug-score {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .debug-close {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .debug-reasons {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .debug-reasons li + li {
+      margin-top: 4px;
+    }
+
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .summary-row {
+        grid-template-columns: 1fr;
+      }
+
+      .debug-popup {
+        left: -2px;
+        right: -2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="eyebrow">Daily Market Narrative</div>
+      <h1>FinNews Brief</h1>
+      <p class="narrative">Markets are being steered by a mixed macro and corporate-news flow, with investors focusing on policy signals and sector leadership.</p>
+      <div class="hero-meta">
+        <span class="tag">Liquidity / Fed Policy</span>
+        <span class="subtle">15 stories curated · Generated 2026-04-17 18:08</span>
+      </div>
+    </section>
+
+    <div class="summary-row">
+      <aside class="panel toc">
+        
+          <a href="#technology-&amp;-innovation">Technology &amp; Innovation · 3</a>
+        
+          <a href="#asia-&amp;-greater-china">Asia &amp; Greater China · 3</a>
+        
+          <a href="#global-finance-&amp;-markets">Global Finance &amp; Markets · 3</a>
+        
+          <a href="#policy-&amp;-institutions">Policy &amp; Institutions · 3</a>
+        
+          <a href="#general---media">General / Media · 3</a>
+        
+      </aside>
+
+      <main>
+        
+          <section class="section" id="technology-&amp;-innovation">
+            <div class="section-header">
+              <h2>Technology &amp; Innovation</h2>
+              <span class="subtle" style="color: var(--muted);">3 stories</span>
+            </div>
+            <div class="cards">
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://techcrunch.com" target="_blank" rel="noreferrer">TechCrunch</a>
+                    <span>2026-04-17 02:55</span>
+                  </div>
+                  <h3><a href="https://techcrunch.com/2026/04/16/new-leaders-new-fund-sequoia-has-raised-7b-to-expand-its-ai-bets/" target="_blank" rel="noreferrer">New leaders, new fund: Sequoia has raised $7B to expand its AI bets</a></h3>
+                  <span class="lang-label">Source website · https://techcrunch.com</span>
+                  <span class="lang-label">English</span>
+                  <p>New leaders, new fund: Sequoia has raised $7B to expand its AI bets: The fundraise is the first major capital raise under Sequoia&#39;s new leadership, with Alfred Lin and Pat Grady now serving as co-stewards of the 54-year-old firm.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The fundraise is the first major capital raise under Sequoia&#39;s new leadership, with Alfred Lin and Pat Grady now serving as co-stewards of the 54-year-old firm.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 17
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 17</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source techcrunch +3</li>
+                          
+                            <li>section Technology &amp; Innovation +6</li>
+                          
+                            <li>impact ai +3</li>
+                          
+                            <li>category ai +5</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://techcrunch.com" target="_blank" rel="noreferrer">TechCrunch</a>
+                    <span>2026-04-16 22:55</span>
+                  </div>
+                  <h3><a href="https://techcrunch.com/2026/04/16/factory-hits-1-5b-valuation-to-build-ai-coding-for-enterprises/" target="_blank" rel="noreferrer">Factory hits $1.5B valuation to build AI coding for enterprises</a></h3>
+                  <span class="lang-label">Source website · https://techcrunch.com</span>
+                  <span class="lang-label">English</span>
+                  <p>Factory hits $1.5B valuation to build AI coding for enterprises: The three-year-old startup raised $150 million led by Khosla Ventures.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The three-year-old startup raised $150 million led by Khosla Ventures.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 17
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 17</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source techcrunch +3</li>
+                          
+                            <li>section Technology &amp; Innovation +6</li>
+                          
+                            <li>impact ai +3</li>
+                          
+                            <li>category ai +5</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://techcrunch.com" target="_blank" rel="noreferrer">TechCrunch</a>
+                    <span>2026-04-16 21:58</span>
+                  </div>
+                  <h3><a href="https://techcrunch.com/2026/04/16/luma-launches-ai-powered-production-studio-with-faith-focused-wonder-project/" target="_blank" rel="noreferrer">Luma launches AI-powered production studio with faith-focused Wonder Project</a></h3>
+                  <span class="lang-label">Source website · https://techcrunch.com</span>
+                  <span class="lang-label">English</span>
+                  <p>Luma launches AI-powered production studio with faith-focused Wonder Project: The studio&#39;s first project will be about Moses and star Academy Award-winner Ben Kingsley, to be released this spring on Prime Video.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The studio&#39;s first project will be about Moses and star Academy Award-winner Ben Kingsley, to be released this spring on Prime Video.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 17
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 17</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source techcrunch +3</li>
+                          
+                            <li>section Technology &amp; Innovation +6</li>
+                          
+                            <li>impact ai +3</li>
+                          
+                            <li>category ai +5</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+            </div>
+          </section>
+        
+          <section class="section" id="asia-&amp;-greater-china">
+            <div class="section-header">
+              <h2>Asia &amp; Greater China</h2>
+              <span class="subtle" style="color: var(--muted);">3 stories</span>
+            </div>
+            <div class="cards">
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.scmp.com/business" target="_blank" rel="noreferrer">South China Morning Post</a>
+                    <span>2026-04-17 09:00</span>
+                  </div>
+                  <h3><a href="https://www.scmp.com/plus/news/china/diplomacy/article/3350432/us-china-tensions-simmer-economy-outperforms-auto-china-begins?utm_source=rss_feed" target="_blank" rel="noreferrer">US-China tensions simmer, economy outperforms, Auto China begins</a></h3>
+                  <span class="lang-label">Source website · https://www.scmp.com/business</span>
+                  <span class="lang-label">English</span>
+                  <p>US-China tensions simmer, economy outperforms, Auto China begins: The China-US trade war bubbled away this week, even as the Strait of Hormuz shutdown dominated global headlines. The US is finalising a multinational agreement on trade and critical minerals to break China’s grip on vita</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The China-US trade war bubbled away this week, even as the Strait of Hormuz shutdown dominated global headlines. The US is finalising a multinational agreement on trade and critical minerals to break China’s grip on vita</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 23
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 23</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source scmp +2</li>
+                          
+                            <li>section Asia &amp; Greater China +5</li>
+                          
+                            <li>impact trade +3</li>
+                          
+                            <li>impact war +4</li>
+                          
+                            <li>category china +5</li>
+                          
+                            <li>category strait +4</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.aljazeera.com/economy/" target="_blank" rel="noreferrer">Al Jazeera</a>
+                    <span>2026-04-17 07:42</span>
+                  </div>
+                  <h3><a href="https://www.aljazeera.com/news/2026/4/17/iran-wars-big-winners-wall-street-weapons-firms-ai-and-green-energy?traffic_source=rss" target="_blank" rel="noreferrer">Iran war’s big winners: Wall Street, weapons firms, AI and green energy</a></h3>
+                  <span class="lang-label">Source website · https://www.aljazeera.com/economy/</span>
+                  <span class="lang-label">English</span>
+                  <p>Iran war’s big winners: Wall Street, weapons firms, AI and green energy: The global economic outlook for 2026 looks grim if the Iran war continues, but some industries are booming.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The global economic outlook for 2026 looks grim if the Iran war continues, but some industries are booming.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 18
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 18</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source al_jazeera +2</li>
+                          
+                            <li>section Asia &amp; Greater China +5</li>
+                          
+                            <li>impact energy +4</li>
+                          
+                            <li>impact war +4</li>
+                          
+                            <li>impact ai +3</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.scmp.com/business" target="_blank" rel="noreferrer">South China Morning Post</a>
+                    <span>2026-04-17 10:00</span>
+                  </div>
+                  <h3><a href="https://www.scmp.com/news/people-culture/gender-diversity/article/3349386/fire-roses-china-only-all-female-cremation-team-challenges-stereotypes-reshapes-mortality-views?utm_source=rss_feed" target="_blank" rel="noreferrer">‘Fire Roses’: China only all-female cremation team challenges stereotypes, reshapes mortality views</a></h3>
+                  <span class="lang-label">Source website · https://www.scmp.com/business</span>
+                  <span class="lang-label">English</span>
+                  <p>‘Fire Roses’: China only all-female cremation team challenges stereotypes, reshapes mortality views: At Beijing’s Babaoshan Funeral Home, China’s only all-female cremation team works in searing heat, defying gender stereotypes while gaining a deeper understanding of life and death. The five women, whose average age is 2</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：At Beijing’s Babaoshan Funeral Home, China’s only all-female cremation team works in searing heat, defying gender stereotypes while gaining a deeper understanding of life and death. The five women, whose average age is 2</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 16
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 16</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source scmp +2</li>
+                          
+                            <li>section Asia &amp; Greater China +5</li>
+                          
+                            <li>category china +5</li>
+                          
+                            <li>category beijing +4</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+            </div>
+          </section>
+        
+          <section class="section" id="global-finance-&amp;-markets">
+            <div class="section-header">
+              <h2>Global Finance &amp; Markets</h2>
+              <span class="subtle" style="color: var(--muted);">3 stories</span>
+            </div>
+            <div class="cards">
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.cnbc.com" target="_blank" rel="noreferrer">CNBC</a>
+                    <span>2026-04-17 05:04</span>
+                  </div>
+                  <h3><a href="https://www.cnbc.com/2026/04/17/oil-prices-wti-brent-israel-lebanon-ceasefire-trump.html" target="_blank" rel="noreferrer">Oil falls as Trump reiterates Iran war ‘should’ end soon and Israel-Lebanon truce lifts hopes</a></h3>
+                  <span class="lang-label">Source website · https://www.cnbc.com</span>
+                  <span class="lang-label">English</span>
+                  <p>Oil falls as Trump reiterates Iran war ‘should’ end soon and Israel-Lebanon truce lifts hopes: Oil prices fell after Donald Trump said Israel and Lebanon had agreed to a 10-day ceasefire following talks in Washington.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：Oil prices fell after Donald Trump said Israel and Lebanon had agreed to a 10-day ceasefire following talks in Washington.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 23
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 23</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source cnbc +3</li>
+                          
+                            <li>section Global Finance &amp; Markets +4</li>
+                          
+                            <li>impact oil +4</li>
+                          
+                            <li>impact war +4</li>
+                          
+                            <li>impact ceasefire +3</li>
+                          
+                            <li>category oil +5</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.cnbc.com" target="_blank" rel="noreferrer">CNBC</a>
+                    <span>2026-04-16 20:32</span>
+                  </div>
+                  <h3><a href="https://www.cnbc.com/2026/04/16/stocks-record-highs-iran-war.html" target="_blank" rel="noreferrer">Why the stock market is hitting records despite Iran war</a></h3>
+                  <span class="lang-label">Source website · https://www.cnbc.com</span>
+                  <span class="lang-label">English</span>
+                  <p>Why the stock market is hitting records despite Iran war: The S&amp;P 500 closed at an all-time high even with little apparent progress in a peace deal between the U.S. and Iran, and a continued oil-supply disruption.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The S&amp;P 500 closed at an all-time high even with little apparent progress in a peace deal between the U.S. and Iran, and a continued oil-supply disruption.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 22
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 22</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source cnbc +3</li>
+                          
+                            <li>section Global Finance &amp; Markets +4</li>
+                          
+                            <li>impact oil +4</li>
+                          
+                            <li>impact war +4</li>
+                          
+                            <li>impact market +2</li>
+                          
+                            <li>category oil +5</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.cnbc.com" target="_blank" rel="noreferrer">CNBC</a>
+                    <span>2026-04-16 20:12</span>
+                  </div>
+                  <h3><a href="https://www.cnbc.com/2026/04/16/fed-kevin-warsh-elizabeth-warren-financial-disclosures.html" target="_blank" rel="noreferrer">Kevin Warsh wants to lead a scandal-ridden Fed. His wealth is a complication.</a></h3>
+                  <span class="lang-label">Source website · https://www.cnbc.com</span>
+                  <span class="lang-label">English</span>
+                  <p>Kevin Warsh wants to lead a scandal-ridden Fed. His wealth is a complication.: Sen. Elizabeth Warren, D-Mass., is calling attention to potential issues in the Fed chair nominee&#39;s financial disclosures.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：Sen. Elizabeth Warren, D-Mass., is calling attention to potential issues in the Fed chair nominee&#39;s financial disclosures.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 18
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 18</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source cnbc +3</li>
+                          
+                            <li>section Global Finance &amp; Markets +4</li>
+                          
+                            <li>impact fed +5</li>
+                          
+                            <li>category fed +6</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+            </div>
+          </section>
+        
+          <section class="section" id="policy-&amp;-institutions">
+            <div class="section-header">
+              <h2>Policy &amp; Institutions</h2>
+              <span class="subtle" style="color: var(--muted);">3 stories</span>
+            </div>
+            <div class="cards">
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.npr.org/sections/business/" target="_blank" rel="noreferrer">NPR Business</a>
+                    <span>2026-04-15 11:39</span>
+                  </div>
+                  <h3><a href="https://www.npr.org/2026/04/15/nx-s1-5786478/trump-federa-reserve-jerome-powell" target="_blank" rel="noreferrer">Once again, Trump threatens to fire Fed Chair Jerome Powell</a></h3>
+                  <span class="lang-label">Source website · https://www.npr.org/sections/business/</span>
+                  <span class="lang-label">English</span>
+                  <p>Once again, Trump threatens to fire Fed Chair Jerome Powell: President Trump once again threatened to fire Federal Reserve Chair Jerome Powell and doubled down on a discredited probe of the central bank.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：President Trump once again threatened to fire Federal Reserve Chair Jerome Powell and doubled down on a discredited probe of the central bank.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 28
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 28</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source npr_business +2</li>
+                          
+                            <li>section Policy &amp; Institutions +3</li>
+                          
+                            <li>impact fed +5</li>
+                          
+                            <li>impact federal reserve +5</li>
+                          
+                            <li>impact central bank +5</li>
+                          
+                            <li>impact bank +3</li>
+                          
+                            <li>category central bank +5</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.dw.com/en/business/s-1431" target="_blank" rel="noreferrer">Deutsche Welle Business</a>
+                    <span>2026-03-31 06:46</span>
+                  </div>
+                  <h3><a href="https://www.dw.com/en/after-the-iran-war-how-fast-could-global-trade-recover/a-76526954?maca=en-rss-en-bus-2091-xml-mrss" target="_blank" rel="noreferrer">After the Iran war, how fast could global trade recover?</a></h3>
+                  <span class="lang-label">Source website · https://www.dw.com/en/business/s-1431</span>
+                  <span class="lang-label">English</span>
+                  <p>After the Iran war, how fast could global trade recover?: The Iran war could end soon as a ceasefire goes into effect. But the true test will be how quickly energy, fertilizer and other supply chains can bounce back whenever the Strait of Hormuz is reopened.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The Iran war could end soon as a ceasefire goes into effect. But the true test will be how quickly energy, fertilizer and other supply chains can bounce back whenever the Strait of Hormuz is reopened.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 27
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 27</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source deutsche_welle_business +2</li>
+                          
+                            <li>section Policy &amp; Institutions +3</li>
+                          
+                            <li>impact trade +3</li>
+                          
+                            <li>impact energy +4</li>
+                          
+                            <li>impact war +4</li>
+                          
+                            <li>impact ceasefire +3</li>
+                          
+                            <li>category ceasefire +4</li>
+                          
+                            <li>category war +4</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.npr.org/sections/business/" target="_blank" rel="noreferrer">NPR Business</a>
+                    <span>2026-04-14 09:56</span>
+                  </div>
+                  <h3><a href="https://www.npr.org/2026/04/14/g-s1-117383/fuel-protests-have-irelands-government-facing-possible-no-confidence-vote" target="_blank" rel="noreferrer">Fuel protests have Ireland&#39;s government facing possible no-confidence vote</a></h3>
+                  <span class="lang-label">Source website · https://www.npr.org/sections/business/</span>
+                  <span class="lang-label">English</span>
+                  <p>Fuel protests have Ireland&#39;s government facing possible no-confidence vote: The prime minister announced new tax cuts to try to end the crisis that began after the U.S.-Israel war on Iran led to the closure of the Strait of Hormuz. The government could face a no-confidence vote over its response</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The prime minister announced new tax cuts to try to end the crisis that began after the U.S.-Israel war on Iran led to the closure of the Strait of Hormuz. The government could face a no-confidence vote over its response</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 16
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 16</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source npr_business +2</li>
+                          
+                            <li>section Policy &amp; Institutions +3</li>
+                          
+                            <li>impact war +4</li>
+                          
+                            <li>category government +3</li>
+                          
+                            <li>category war +4</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+            </div>
+          </section>
+        
+          <section class="section" id="general---media">
+            <div class="section-header">
+              <h2>General / Media</h2>
+              <span class="subtle" style="color: var(--muted);">3 stories</span>
+            </div>
+            <div class="cards">
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.bbc.com/news/business" target="_blank" rel="noreferrer">BBC Business</a>
+                    <span>2026-04-16 10:22</span>
+                  </div>
+                  <h3><a href="https://www.bbc.com/news/articles/cz0e23r0993o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noreferrer">UK economy grew faster than expected in February ahead of Iran war</a></h3>
+                  <span class="lang-label">Source website · https://www.bbc.com/news/business</span>
+                  <span class="lang-label">English</span>
+                  <p>UK economy grew faster than expected in February ahead of Iran war: The economy saw its biggest monthly rise in more than two years just before the outbreak of the US-Israeli war with Iran.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The economy saw its biggest monthly rise in more than two years just before the outbreak of the US-Israeli war with Iran.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 10
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 10</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source bbc_business +3</li>
+                          
+                            <li>section General / Media +1</li>
+                          
+                            <li>impact war +4</li>
+                          
+                            <li>category economy +2</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.bbc.com/news/business" target="_blank" rel="noreferrer">BBC Business</a>
+                    <span>2026-04-16 19:19</span>
+                  </div>
+                  <h3><a href="https://www.bbc.com/news/articles/czjw2kz0l22o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noreferrer">Europe has &#39;maybe six weeks of jet fuel left&#39;, energy boss warns</a></h3>
+                  <span class="lang-label">Source website · https://www.bbc.com/news/business</span>
+                  <span class="lang-label">English</span>
+                  <p>Europe has &#39;maybe six weeks of jet fuel left&#39;, energy boss warns: Flights could soon be cancelled if supplies from the Gulf remain blocked, says the International Energy Agency.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：Flights could soon be cancelled if supplies from the Gulf remain blocked, says the International Energy Agency.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 8
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 8</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source bbc_business +3</li>
+                          
+                            <li>section General / Media +1</li>
+                          
+                            <li>impact energy +4</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+                <article class="card">
+                  <div class="source-row">
+                    <a class="source-badge" href="https://www.bbc.com/news/business" target="_blank" rel="noreferrer">BBC Business</a>
+                    <span>2026-04-16 16:04</span>
+                  </div>
+                  <h3><a href="https://www.bbc.com/news/articles/cpvxp4xnrwdo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noreferrer">UK prepares for food shortages in worst case scenario as Iran war continues</a></h3>
+                  <span class="lang-label">Source website · https://www.bbc.com/news/business</span>
+                  <span class="lang-label">English</span>
+                  <p>UK prepares for food shortages in worst case scenario as Iran war continues: The UK could face some food shortages by the summer under a worst case scenario drawn up by government officials.</p>
+                  <span class="lang-label">繁體中文</span>
+                  <p>重點摘要：The UK could face some food shortages by the summer under a worst case scenario drawn up by government officials.</p>
+                  
+                    <div class="debug-trigger-row" data-debug-root>
+                      <button
+                        class="debug-trigger"
+                        type="button"
+                        aria-expanded="false"
+                        aria-haspopup="dialog"
+                        data-debug-trigger
+                      >
+                        Importance score · 8
+                      </button>
+                      <div class="debug-popup" role="dialog" aria-label="Importance score details" data-debug-popup>
+                        <div class="debug-popup-header">
+                          <span class="debug-score">Importance score · 8</span>
+                          <button class="debug-close" type="button" aria-label="Close importance score details" data-debug-close>&times;</button>
+                        </div>
+                        <ul class="debug-reasons">
+                          
+                            <li>source bbc_business +3</li>
+                          
+                            <li>section General / Media +1</li>
+                          
+                            <li>impact war +4</li>
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  
+                </article>
+              
+            </div>
+          </section>
+        
+      </main>
+    </div>
+
+    <footer>Sources linked on every story card. Output generated for editorial review.</footer>
+  </div>
+  <script>
+    (() => {
+      const roots = Array.from(document.querySelectorAll('[data-debug-root]'));
+      const closeAll = () => {
+        roots.forEach((root) => {
+          const trigger = root.querySelector('[data-debug-trigger]');
+          const popup = root.querySelector('[data-debug-popup]');
+          if (!trigger || !popup) {
+            return;
+          }
+          trigger.setAttribute('aria-expanded', 'false');
+          popup.classList.remove('is-open');
+        });
+      };
+
+      roots.forEach((root) => {
+        const trigger = root.querySelector('[data-debug-trigger]');
+        const popup = root.querySelector('[data-debug-popup]');
+        const close = root.querySelector('[data-debug-close]');
+        if (!trigger || !popup || !close) {
+          return;
+        }
+
+        trigger.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const willOpen = !popup.classList.contains('is-open');
+          closeAll();
+          if (willOpen) {
+            popup.classList.add('is-open');
+            trigger.setAttribute('aria-expanded', 'true');
+          }
+        });
+
+        close.addEventListener('click', (event) => {
+          event.stopPropagation();
+          closeAll();
+        });
+
+        popup.addEventListener('click', (event) => {
+          event.stopPropagation();
+        });
+      });
+
+      document.addEventListener('click', () => {
+        closeAll();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeAll();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

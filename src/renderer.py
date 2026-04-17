@@ -8,7 +8,7 @@ from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from src.config import CATEGORY_KEYWORDS, FEED_CATEGORIES, IMPACT_KEYWORDS, NEGATIVE_KEYWORDS, OUTPUT_DIR, SECTION_ARTICLE_LIMIT, SECTION_PRIORITY, SOURCE_PRIORITY, TAG_COLORS, TEMPLATE_DIR
+from src.config import CATEGORY_KEYWORDS, DOCS_DIR, FEED_CATEGORIES, IMPACT_KEYWORDS, NEGATIVE_KEYWORDS, OUTPUT_DIR, SECTION_ARTICLE_LIMIT, SECTION_PRIORITY, SOURCE_PRIORITY, TAG_COLORS, TEMPLATE_DIR
 
 
 def _published_sort_key(value: str) -> datetime:
@@ -105,3 +105,10 @@ def save_html(html: str, generated_at: datetime) -> Path:
     output_path = OUTPUT_DIR / f"news_{generated_at.strftime('%Y%m%d')}.html"
     output_path.write_text(html, encoding="utf-8")
     return output_path
+
+
+def publish_latest_html(html: str) -> Path:
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    published_path = DOCS_DIR / "index.html"
+    published_path.write_text(html, encoding="utf-8")
+    return published_path

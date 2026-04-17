@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from src.config import DEFAULT_SHOW_RANK_DEBUG, DEFAULT_SUMMARIZER_PROVIDER
 from src.fetcher import fetch_all
 from src.mailer import EmailSettings, send_report_email
-from src.renderer import render_html, save_html
+from src.renderer import publish_latest_html, render_html, save_html
 from src.summarizer import generate_market_narrative, summarize_all
 
 
@@ -37,6 +37,7 @@ def main() -> int:
     narrative = generate_market_narrative(summarized_articles, provider=summarizer_provider, api_key=gemini_api_key)
     html = render_html(summarized_articles, narrative, generated_at, show_rank_debug=show_rank_debug)
     output_path = save_html(html, generated_at)
+    published_path = publish_latest_html(html)
 
     try:
         if send_report_email(email_settings, html, output_path, generated_at):
@@ -45,6 +46,7 @@ def main() -> int:
         print(f"Email delivery failed: {exc}")
 
     print(f"Generated {output_path}")
+    print(f"Published {published_path}")
     return 0
 
 

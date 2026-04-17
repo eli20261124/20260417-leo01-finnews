@@ -4,6 +4,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = BASE_DIR / "output"
 TEMPLATE_DIR = BASE_DIR / "templates"
+DOCS_DIR = BASE_DIR / "docs"
 MAX_ARTICLES_PER_SOURCE = 10
 SECTION_ARTICLE_LIMIT = 3
 BATCH_SIZE = 5
