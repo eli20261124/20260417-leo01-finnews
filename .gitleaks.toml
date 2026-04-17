@@ -1,0 +1,10 @@
+title = "FinNews gitleaks configuration"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated public site artifact can contain false positives from article content"
+paths = [
+  '''docs/index\.html''',
+]
