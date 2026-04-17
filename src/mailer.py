@@ -20,7 +20,7 @@ class EmailSettings:
     app_password: str | None
 
 
-def send_report_email(settings: EmailSettings, html: str, output_path: Path, generated_at: datetime) -> bool:
+def send_report_email(settings: EmailSettings, html: str, pdf_path: Path, generated_at: datetime) -> bool:
     if not settings.enabled:
         return False
     if not settings.recipient or not settings.sender or not settings.app_password:
@@ -31,14 +31,14 @@ def send_report_email(settings: EmailSettings, html: str, output_path: Path, gen
     message["Subject"] = f"FinNews Daily Brief - {generated_at.strftime('%Y-%m-%d')}"
     message["From"] = settings.sender
     message["To"] = settings.recipient
-    message.set_content("Your email client does not support HTML. Please open the attached FinNews report.")
+    message.set_content("Your email client does not support HTML. Please open the attached FinNews PDF report.")
     message.add_alternative(html, subtype="html")
 
     message.add_attachment(
-        output_path.read_bytes(),
-        maintype="text",
-        subtype="html",
-        filename=output_path.name,
+        pdf_path.read_bytes(),
+        maintype="application",
+        subtype="pdf",
+        filename=pdf_path.name,
     )
 
     context = ssl.create_default_context()

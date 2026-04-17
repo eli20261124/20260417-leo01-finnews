@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from src.config import DEFAULT_SHOW_RANK_DEBUG, DEFAULT_SUMMARIZER_PROVIDER
 from src.fetcher import fetch_all
 from src.mailer import EmailSettings, send_report_email
-from src.renderer import publish_latest_html, render_html, save_html
+from src.renderer import publish_latest_html, render_html, save_html, save_pdf
 from src.summarizer import generate_market_narrative, summarize_all
 
 
@@ -49,11 +49,12 @@ def main() -> int:
     narrative = generate_market_narrative(summarized_articles, provider=summarizer_provider, api_key=gemini_api_key)
     html = render_html(summarized_articles, narrative, generated_at, show_rank_debug=show_rank_debug)
     output_path = save_html(html, generated_at)
+    pdf_path = save_pdf(html, generated_at)
     published_path = publish_latest_html(html)
 
     email_sent = False
     try:
-        email_sent = send_report_email(email_settings, html, output_path, generated_at)
+        email_sent = send_report_email(email_settings, html, pdf_path, generated_at)
         if email_sent:
             print(f"Email sent to {email_settings.recipient}")
     except Exception as exc:
@@ -66,6 +67,7 @@ def main() -> int:
         return 1
 
     print(f"Generated {output_path}")
+    print(f"Generated {pdf_path}")
     print(f"Published {published_path}")
     return 0
 

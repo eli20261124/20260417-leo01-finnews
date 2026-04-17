@@ -1,12 +1,32 @@
 from __future__ import annotations
 
+import os
 import re
+import sys
 from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+
+def _configure_macos_pdf_libraries() -> None:
+    if sys.platform != "darwin":
+        return
+    library_paths = ["/opt/homebrew/lib", "/opt/homebrew/opt/libffi/lib"]
+    existing_paths = [path for path in (os.getenv("DYLD_FALLBACK_LIBRARY_PATH") or "").split(":") if path]
+    merged_paths = []
+    for path in library_paths + existing_paths:
+        if path and path not in merged_paths:
+            merged_paths.append(path)
+    if merged_paths:
+        os.environ["DYLD_FALLBACK_LIBRARY_PATH"] = ":".join(merged_paths)
+
+
+_configure_macos_pdf_libraries()
+
+from weasyprint import HTML
 
 from src.config import CATEGORY_KEYWORDS, DOCS_DIR, FEED_CATEGORIES, IMPACT_KEYWORDS, NEGATIVE_KEYWORDS, OUTPUT_DIR, SECTION_ARTICLE_LIMIT, SECTION_PRIORITY, SOURCE_PRIORITY, TAG_COLORS, TEMPLATE_DIR
 
@@ -104,6 +124,13 @@ def save_html(html: str, generated_at: datetime) -> Path:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     output_path = OUTPUT_DIR / f"news_{generated_at.strftime('%Y%m%d')}.html"
     output_path.write_text(html, encoding="utf-8")
+    return output_path
+
+
+def save_pdf(html: str, generated_at: datetime) -> Path:
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = OUTPUT_DIR / f"news_{generated_at.strftime('%Y%m%d')}.pdf"
+    HTML(string=html, base_url=str(TEMPLATE_DIR.parent)).write_pdf(output_path)
     return output_path
 
 
